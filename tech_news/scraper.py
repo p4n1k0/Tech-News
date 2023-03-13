@@ -17,14 +17,13 @@ def fetch(url):
 
 # Requisito 2
 def scrape_updates(html_content):
-    response = parsel.Selector(html_content).css(
+    return parsel.Selector(html_content).css(
         '.cs-overlay-link::attr(href)').getall()
-    return response
 
 
 # Requisito 3
 def scrape_next_page_link(html_content):
-    """Seu código deve vir aqui"""
+    return parsel.Selector(html_content).css('.next::attr(href)').get()
 
 
 # Requisito 4
