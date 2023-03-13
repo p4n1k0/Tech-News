@@ -1,5 +1,6 @@
 import requests
 import time
+import parsel
 
 
 # Requisito 1
@@ -16,7 +17,9 @@ def fetch(url):
 
 # Requisito 2
 def scrape_updates(html_content):
-    """Seu código deve vir aqui"""
+    response = parsel.Selector(html_content).css(
+        '.cs-overlay-link::attr(href)').getall()
+    return response
 
 
 # Requisito 3
