@@ -1,25 +1,29 @@
 import requests
 import time
-import parsel
-from tech_news.database import create_news
+from parsel import Selector
+from .database import create_news
 
 
 # Requisito 1
 def fetch(url):
-    HEADER = {"user-agent": "Fake user-agent"}
-    time.sleep(1)
     try:
-        response = requests.get(url, headers=HEADER, timeout=3)
+        response = requests.get(
+            url, headers={"user-agent": "Fake user-agent"}, timeout=2
+        )
+        time.sleep(1)
         if response.status_code == 200:
             return response.text
-    except requests.exceptions.RequestException:
+        else:
+            return None
+    except requests.ReadTimeout:
         return None
 
 
 # Requisito 2
 def scrape_updates(html_content):
-    return parsel.Selector(html_content).css(
-       '.cs-overlay-link::attr(href)').getall()
+    selector = Selector(text=html_content)
+    url_list = selector.css("h2.entry-title a::attr(href)").getall()
+    return url_list
 
 
 # Requisito 3
