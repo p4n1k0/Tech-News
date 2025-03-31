@@ -28,17 +28,6 @@ def search_by_date(date):
         raise ValueError("Data inválida")
 
 
-def search_by_tag(tag):
-    news_found = search_news(
-        {"tags": {"$elemMatch": {"$regex": tag, "$options": "i"}}}
-    )
-    news_list = []
-    for new in news_found:
-        new_tuple = (new["title"], new["url"])
-        news_list.append(new_tuple)
-    return news_list
-
-
 # Requisito 9
 def search_by_category(category):
     news_found = search_news(
