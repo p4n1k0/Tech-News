@@ -36,37 +36,20 @@ def scrape_next_page_link(html_content):
 
 # Requisito 4
 def scrape_news(html_content):    
-    selector = Selector(html_content)
-    url = selector.css("link[rel*=canonical]::attr(href)").get()
-    title = selector.css("h1.entry-title::text").get().strip()
-    timestamp = selector.css("li.meta-date::text").get()
-    writer = selector.css("span.author a::text").get()
-    category = selector.css("div.meta-category a span.label::text").get()
-    tags = selector.css("section.post-tags ul li a::text").getall()
-
-    first_paragraph = selector.css("p")[0]
-    summary_list = first_paragraph.css("p *::text").getall()
-    summary = "".join(summary_list).strip()
-
-    # Source:
-    # https://www.askpython.com/python/string/extract-digits-from-python-string
-    comments = selector.css("h5.title-block::text").get()
-    comments_count = 0
-    if re.search(r"\d+", comments) is not None:
-        comments_count += re.search(r"\d+", comments)
-
-    article = {
-        "url": url,
-        "title": title,
-        "timestamp": timestamp,
-        "writer": writer,
-        "comments_count": comments_count,
-        "summary": summary,
-        "tags": tags,
-        "category": category,
+    return {
+        'url': Selector(html_content).css(
+            '.pk-share-buttons-wrap').attrib['data-share-url'],
+        'title': Selector(html_content).css(
+            '.entry-title::text').get().strip('\xa0'),
+        'timestamp': Selector(html_content).css(
+            '.meta-date::text').get(),
+        'writer': Selector(html_content).css('.n::text').get(),
+        'reading_time': int(Selector(html_content).css(
+            '.meta-reading-time::text').get().split(' ')[0]),
+        'summary': Selector(html_content).css(
+            '.entry-content p').xpath('string()').get().strip(),
+        'category': Selector(html_content).css('.label::text').get()
     }
-
-    return article
 
 
 # Requisito 5
